@@ -15,4 +15,18 @@ async function startvideo() {
     console.error(err);
   }
   document.getElementById("video").srcObject = stream;
+  console.log(faceapi.nets);
 }
+document.addEventListener("DOMContentLoaded", () => {
+  let video = document.getElementById("video");
+  video.addEventListener("play", () => {
+    const canvas = faceapi.createCanvasFromMedia(video);
+    document.body.append(canvas);
+    setInterval(async () => {
+      const detections = await faceapi
+        .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+        .withFaceExpressions();
+    }, 100);
+  });
+});
